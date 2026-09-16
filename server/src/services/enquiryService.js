@@ -76,10 +76,24 @@ class EnquiryService {
       }
     }
 
-    return prisma.$transaction(async (tx) => {
-      const count = await tx.enquiry.count();
+    return prisma.$transaction(async (tx) =\u003e {
       const year = new Date().getFullYear();
-      const enquiryNumber = `ENQ-${year}-${String(count + 1).padStart(4, '0')}`;
+      const prefix = `ENQ-${year}-`;
+
+      // Find the highest existing sequence number for this year
+      const latest = await tx.enquiry.findFirst({
+        where: { enquiryNumber: { startsWith: prefix } },
+        orderBy: { enquiryNumber: 'desc' },
+        select: { enquiryNumber: true },
+      });
+
+      let nextSeq = 1;
+      if (latest) {
+        const parts = latest.enquiryNumber.split('-');
+        nextSeq = parseInt(parts[2], 10) + 1;
+      }
+
+      const enquiryNumber = `${prefix}${String(nextSeq).padStart(4, '0')}`;
 
       const enquiry = await tx.enquiry.create({
         data: {

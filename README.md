@@ -89,6 +89,7 @@ udyam/
 │   │   ├── services/           # Business logic & transaction handlers
 │   │   ├── utils/              # Calculation engine & response helpers
 │   │   ├── swagger.js          # OpenAPI specification
+│   │   ├── app.js              # Express app (prod: serves React SPA)
 │   │   └── server.js           # Server entry point
 │   └── tests/                  # Jest test suites (5 mandatory + 1 bonus concurrency)
 ├── docs/                       # Architectural & DB documentation
@@ -96,7 +97,10 @@ udyam/
 │   ├── database.md
 │   ├── er-diagram.md
 │   └── api.md
-├── docker-compose.yml          # PostgreSQL 16 Docker Compose configuration
+├── Dockerfile                  # Multi-stage production Docker build
+├── .dockerignore               # Docker build context filter
+├── docker-compose.yml          # Full-stack: PostgreSQL + App (production)
+├── package.json                # Root scripts: install, build, deploy
 └── README.md
 ```
 
@@ -207,10 +211,92 @@ Follow this walkthrough to experience the entire operational pipeline:
 
 ## 📖 Documentation Directory
 
-- [Architecture & Data Flow](file:///Users/Santosh/udyam/docs/architecture.md)
-- [Database Schema & Constraints](file:///Users/Santosh/udyam/docs/database.md)
-- [Mermaid ER Diagram](file:///Users/Santosh/udyam/docs/er-diagram.md)
-- [API Endpoints Specification](file:///Users/Santosh/udyam/docs/api.md)
+- [Architecture & Data Flow](docs/architecture.md)
+- [Database Schema & Constraints](docs/database.md)
+- [Mermaid ER Diagram](docs/er-diagram.md)
+- [API Endpoints Specification](docs/api.md)
+
+---
+
+## 🚢 Deployment
+
+### Option 1: Docker Compose (Recommended — One Command)
+
+The entire stack (PostgreSQL + Full-Stack App) runs from a single command:
+
+```bash
+# Clone the repo
+git clone <repository-url> && cd udyam
+
+# Start everything (builds app, starts database, seeds data)
+docker compose up --build -d
+
+# Push the Prisma schema and seed the database (first-time only)
+docker compose exec app sh -c "cd server && npx prisma db push && node prisma/seed.js"
+```
+
+The application is available at **http://localhost:5000** (single port serves API + React SPA).
+
+```bash
+# View logs
+docker compose logs -f app
+
+# Stop everything
+docker compose down
+
+# Stop and remove data volumes
+docker compose down -v
+```
+
+### Option 2: Manual Node.js Deployment
+
+```bash
+# 1. Ensure PostgreSQL is running (Docker or hosted)
+docker compose up postgres -d
+
+# 2. Install dependencies
+cd server && npm install && cd ../client && npm install && cd ..
+
+# 3. Build the React production bundle
+cd client && npm run build && cd ..
+
+# 4. Setup the database
+cd server && npx prisma db push && node prisma/seed.js && cd ..
+
+# 5. Start the production server (single port)
+cd server && NODE_ENV=production node src/server.js
+```
+
+Application available at **http://localhost:5000**.
+
+### Option 3: PaaS Deployment (Render / Railway / Heroku)
+
+1. **Create a PostgreSQL database** on your platform.
+2. **Set environment variables** on the platform:
+   ```
+   DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DB_NAME?schema=public
+   JWT_SECRET=your_strong_production_secret
+   NODE_ENV=production
+   PORT=5000
+   ```
+3. **Set build command**:
+   ```bash
+   cd client && npm install && npm run build && cd ../server && npm install && npx prisma db push && node prisma/seed.js
+   ```
+4. **Set start command**:
+   ```bash
+   cd server && NODE_ENV=production node src/server.js
+   ```
+
+### Environment Variables Reference
+
+| Variable | Required | Default | Description |
+| :--- | :---: | :--- | :--- |
+| `DATABASE_URL` | ✅ | — | PostgreSQL connection string |
+| `JWT_SECRET` | ✅ | — | Secret key for JWT signing (use a strong random string!) |
+| `NODE_ENV` | ✅ | `development` | Set to `production` for deployment |
+| `PORT` | ❌ | `5000` | Server port |
+| `JWT_EXPIRES_IN` | ❌ | `7d` | Token expiry duration |
 
 ---
 

@@ -39,6 +39,20 @@ app.use('/api/enquiries', enquiryRoutes);
 app.use('/api/quotations', quotationRoutes);
 app.use('/api/sales-orders', salesOrderRoutes);
 
+// --- Production: Serve React SPA ---
+const path = require('path');
+const clientDistPath = path.join(__dirname, '../../client/dist');
+
+if (process.env.NODE_ENV === 'production') {
+  // Serve static assets from the production build
+  app.use(express.static(clientDistPath));
+
+  // SPA fallback: serve index.html for all non-API GET requests
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(clientDistPath, 'index.html'));
+  });
+}
+
 // Central error handler
 app.use(errorHandler);
 
