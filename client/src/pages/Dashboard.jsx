@@ -90,36 +90,49 @@ export default function Dashboard({ setActivePage }) {
   return (
     <div className="space-y-6">
       {/* Welcome Banner */}
-      <div className="rounded-2xl bg-gradient-to-r from-sky-900 via-sky-800 to-slate-900 text-white p-6 sm:p-8 shadow-md">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-                Welcome back, {user?.name}
-              </h1>
-              <StatusBadge status={user?.role} className="bg-white/10 text-white border-white/20" />
+      <div className="rounded-2xl bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white p-6 sm:p-8 shadow-xl border border-slate-850 relative overflow-hidden">
+        {/* Subtle warm orange brand glow */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-10 -left-10 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-b from-white to-slate-100 p-2 shadow-lg shadow-orange-500/10 border border-white/20 shrink-0">
+              <img
+                src="/logo-icon-transparent.png"
+                alt="Udyam"
+                className="w-full h-full object-contain"
+              />
             </div>
-            <p className="text-sky-200 text-sm mt-1">
-              {isAdmin
-                ? 'Admin Control: Manage inventory, confirm sales orders, and process dispatches.'
-                : 'Sales Dashboard: Create customer enquiries, draft quotations, and convert won deals.'}
-            </p>
+            <div>
+              <div className="flex items-center gap-2.5">
+                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+                  Welcome back, {user?.name}
+                </h1>
+                <StatusBadge status={user?.role} />
+              </div>
+              <p className="text-slate-300 text-sm mt-1">
+                {isAdmin
+                  ? 'Admin Control: Manage inventory, confirm sales orders, and process dispatches.'
+                  : 'Sales Dashboard: Create customer enquiries, draft quotations, and convert won deals.'}
+              </p>
+            </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5 shrink-0">
             <Button
-              variant="secondary"
+              variant="primary"
               size="sm"
               onClick={() => setActivePage('enquiries')}
-              className="bg-white/10 hover:bg-white/20 text-white border-white/20 shadow-none"
+              className="bg-gradient-to-r from-orange-500 to-amber-600 shadow-brand hover:shadow-brand-lg border-0 font-semibold"
             >
               + New Enquiry
             </Button>
             <Button
-              variant="primary"
+              variant="secondary"
               size="sm"
               onClick={() => setActivePage('quotations')}
-              className="bg-sky-500 hover:bg-sky-400 text-white border-none shadow-md"
+              className="bg-slate-800/80 hover:bg-slate-700 text-white border-slate-700 shadow-none font-semibold"
             >
               View Quotations
             </Button>
@@ -127,30 +140,30 @@ export default function Dashboard({ setActivePage }) {
         </div>
 
         {/* Operational Workflow Progress Line */}
-        <div className="mt-8 pt-6 border-t border-white/10">
-          <p className="text-xs font-semibold uppercase tracking-wider text-sky-300 mb-3">
-            Core ERP Operations Lifecycle
+        <div className="relative z-10 mt-8 pt-6 border-t border-slate-800">
+          <p className="text-xs font-bold uppercase tracking-wider text-orange-400 mb-3">
+            Core Operations Lifecycle
           </p>
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center text-xs">
-            <div className="bg-white/5 rounded-lg p-2.5 border border-white/10">
-              <span className="font-semibold block text-white">1. Customer Enquiry</span>
-              <span className="text-[10px] text-sky-200">Requirements</span>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 text-center text-xs">
+            <div className="bg-slate-900/80 rounded-xl p-3 border border-slate-800 hover:border-orange-500/40 transition-colors">
+              <span className="font-bold block text-white">1. Customer Enquiry</span>
+              <span className="text-[10px] text-slate-400">Multi-item requirements</span>
             </div>
-            <div className="bg-white/5 rounded-lg p-2.5 border border-white/10">
-              <span className="font-semibold block text-white">2. Quotation Engine</span>
-              <span className="text-[10px] text-sky-200">Discount & GST</span>
+            <div className="bg-slate-900/80 rounded-xl p-3 border border-slate-800 hover:border-orange-500/40 transition-colors">
+              <span className="font-bold block text-white">2. Quotation Engine</span>
+              <span className="text-[10px] text-slate-400">Discount & GST math</span>
             </div>
-            <div className="bg-white/5 rounded-lg p-2.5 border border-white/10">
-              <span className="font-semibold block text-white">3. Sales Order</span>
-              <span className="text-[10px] text-sky-200">Status: Pending</span>
+            <div className="bg-slate-900/80 rounded-xl p-3 border border-slate-800 hover:border-orange-500/40 transition-colors">
+              <span className="font-bold block text-white">3. Sales Order</span>
+              <span className="text-[10px] text-slate-400">Status: Pending</span>
             </div>
-            <div className="bg-white/5 rounded-lg p-2.5 border border-white/10">
-              <span className="font-semibold block text-white">4. Stock Reservation</span>
-              <span className="text-[10px] text-sky-200">Atomic Row Lock</span>
+            <div className="bg-slate-900/80 rounded-xl p-3 border border-slate-800 hover:border-orange-500/40 transition-colors">
+              <span className="font-bold block text-white">4. Stock Reservation</span>
+              <span className="text-[10px] text-orange-300 font-medium">Atomic Row Lock</span>
             </div>
-            <div className="bg-white/5 rounded-lg p-2.5 border border-white/10">
-              <span className="font-semibold block text-white">5. Product Dispatch</span>
-              <span className="text-[10px] text-sky-200">Physical Reduced</span>
+            <div className="bg-slate-900/80 rounded-xl p-3 border border-slate-800 hover:border-orange-500/40 transition-colors">
+              <span className="font-bold block text-white">5. Product Dispatch</span>
+              <span className="text-[10px] text-emerald-400 font-medium">Physical Stock Reduced</span>
             </div>
           </div>
         </div>
@@ -162,7 +175,7 @@ export default function Dashboard({ setActivePage }) {
           label="Total Enquiries"
           value={stats.enquiries}
           icon={FileSpreadsheet}
-          color="sky"
+          color="orange"
           subtext="Active customer leads"
           onClick={() => setActivePage('enquiries')}
         />
@@ -201,7 +214,7 @@ export default function Dashboard({ setActivePage }) {
             variant="ghost"
             size="sm"
             onClick={() => setActivePage('sales-orders')}
-            className="text-sky-600 hover:text-sky-700"
+            className="text-orange-600 hover:text-orange-700 font-semibold"
           >
             View All <ArrowRight className="w-3.5 h-3.5 ml-1" />
           </Button>

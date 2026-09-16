@@ -4,34 +4,38 @@ export default function StatCard({
   label,
   value,
   icon: Icon,
-  color = 'sky',
+  color = 'orange',
   subtext,
   onClick,
 }) {
   const colorMap = {
-    sky: {
-      bg: 'bg-sky-50 text-sky-600',
-      border: 'hover:border-sky-300',
-    },
-    emerald: {
-      bg: 'bg-emerald-50 text-emerald-600',
-      border: 'hover:border-emerald-300',
+    orange: {
+      bg: 'bg-orange-50 text-orange-600 border border-orange-200/60',
+      border: 'hover:border-orange-400 hover:shadow-brand',
     },
     amber: {
-      bg: 'bg-amber-50 text-amber-600',
-      border: 'hover:border-amber-300',
+      bg: 'bg-amber-50 text-amber-600 border border-amber-200/60',
+      border: 'hover:border-amber-400',
+    },
+    emerald: {
+      bg: 'bg-emerald-50 text-emerald-600 border border-emerald-200/60',
+      border: 'hover:border-emerald-400',
     },
     purple: {
-      bg: 'bg-purple-50 text-purple-600',
-      border: 'hover:border-purple-300',
+      bg: 'bg-purple-50 text-purple-600 border border-purple-200/60',
+      border: 'hover:border-purple-400',
     },
     rose: {
-      bg: 'bg-rose-50 text-rose-600',
-      border: 'hover:border-rose-300',
+      bg: 'bg-rose-50 text-rose-600 border border-rose-200/60',
+      border: 'hover:border-rose-400',
+    },
+    sky: {
+      bg: 'bg-sky-50 text-sky-600 border border-sky-200/60',
+      border: 'hover:border-sky-400',
     },
   };
 
-  const scheme = colorMap[color] || colorMap.sky;
+  const scheme = colorMap[color] || colorMap.orange;
 
   return (
     <div

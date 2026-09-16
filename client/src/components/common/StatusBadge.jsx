@@ -9,13 +9,13 @@ export default function StatusBadge({ status, className = '' }) {
     // Enquiry statuses
     NEW: {
       label: 'New',
-      bg: 'bg-sky-50 text-sky-700 border-sky-200',
-      dot: 'bg-sky-500',
+      bg: 'bg-orange-50 text-orange-700 border-orange-200',
+      dot: 'bg-orange-500',
     },
     QUOTED: {
       label: 'Quoted',
-      bg: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-      dot: 'bg-indigo-500',
+      bg: 'bg-amber-50 text-amber-700 border-amber-200',
+      dot: 'bg-amber-500',
     },
     WON: {
       label: 'Won',
@@ -31,13 +31,13 @@ export default function StatusBadge({ status, className = '' }) {
     // Quotation statuses
     DRAFT: {
       label: 'Draft',
-      bg: 'bg-slate-50 text-slate-700 border-slate-200',
+      bg: 'bg-slate-100 text-slate-700 border-slate-200',
       dot: 'bg-slate-400',
     },
     SENT: {
       label: 'Sent',
-      bg: 'bg-blue-50 text-blue-700 border-blue-200',
-      dot: 'bg-blue-500',
+      bg: 'bg-amber-50 text-amber-700 border-amber-200',
+      dot: 'bg-amber-500',
     },
     ACCEPTED: {
       label: 'Accepted',
@@ -63,8 +63,8 @@ export default function StatusBadge({ status, className = '' }) {
     },
     DISPATCHED: {
       label: 'Dispatched',
-      bg: 'bg-purple-50 text-purple-700 border-purple-200',
-      dot: 'bg-purple-500',
+      bg: 'bg-blue-50 text-blue-700 border-blue-200',
+      dot: 'bg-blue-500',
     },
     CANCELLED: {
       label: 'Cancelled',
@@ -75,13 +75,13 @@ export default function StatusBadge({ status, className = '' }) {
     // Role badges
     ADMIN: {
       label: 'Admin',
-      bg: 'bg-purple-100 text-purple-800 border-purple-200 font-semibold',
-      dot: 'bg-purple-600',
+      bg: 'bg-slate-900 text-orange-400 border-slate-700 font-semibold shadow-xs',
+      dot: 'bg-orange-500',
     },
     SALES_USER: {
       label: 'Sales User',
-      bg: 'bg-sky-100 text-sky-800 border-sky-200 font-semibold',
-      dot: 'bg-sky-600',
+      bg: 'bg-orange-100 text-orange-800 border-orange-200 font-semibold shadow-xs',
+      dot: 'bg-orange-600',
     },
   };
 

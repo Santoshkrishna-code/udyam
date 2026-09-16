@@ -37,7 +37,7 @@ export default function Table({
             <tr>
               <td colSpan={columns.length} className="px-6 py-12 text-center text-slate-500">
                 <div className="flex flex-col items-center justify-center gap-2">
-                  <Loader2 className="w-6 h-6 animate-spin text-sky-600" />
+                  <Loader2 className="w-6 h-6 animate-spin text-orange-600" />
                   <span className="text-xs font-medium">Loading data...</span>
                 </div>
               </td>
@@ -57,7 +57,7 @@ export default function Table({
                 key={row.id || rowIdx}
                 onClick={() => onRowClick && onRowClick(row)}
                 className={`transition-colors ${
-                  onRowClick ? 'cursor-pointer hover:bg-slate-50/80' : 'hover:bg-slate-50/40'
+                  onRowClick ? 'cursor-pointer hover:bg-orange-50/40' : 'hover:bg-orange-50/20'
                 }`}
               >
                 {columns.map((col, colIdx) => {

@@ -25,19 +25,21 @@ export default function Button({
 
   const variantStyles = {
     primary:
-      'bg-sky-600 text-white hover:bg-sky-700 focus:ring-sky-500 active:bg-sky-800',
+      'bg-gradient-to-r from-orange-500 via-orange-600 to-amber-600 text-white hover:from-orange-600 hover:to-amber-700 focus:ring-orange-500 shadow-sm hover:shadow-brand transition-all font-semibold',
     secondary:
-      'bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 focus:ring-slate-400',
+      'bg-white text-slate-700 border border-slate-300 hover:bg-orange-50/50 hover:border-orange-300 focus:ring-orange-400',
     success:
-      'bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-500',
+      'bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-500 shadow-sm',
     danger:
-      'bg-rose-600 text-white hover:bg-rose-700 focus:ring-rose-500',
+      'bg-rose-600 text-white hover:bg-rose-700 focus:ring-rose-500 shadow-sm',
     warning:
-      'bg-amber-500 text-white hover:bg-amber-600 focus:ring-amber-500',
+      'bg-amber-500 text-white hover:bg-amber-600 focus:ring-amber-500 shadow-sm',
     outline:
-      'border border-sky-600 text-sky-600 hover:bg-sky-50 focus:ring-sky-500',
+      'border-2 border-orange-500 text-orange-600 hover:bg-orange-50 focus:ring-orange-500 font-semibold',
     ghost:
-      'text-slate-600 hover:bg-slate-100 hover:text-slate-900 shadow-none border-0',
+      'text-slate-600 hover:bg-orange-50 hover:text-orange-700 shadow-none border-0',
+    dark:
+      'bg-slate-900 text-white hover:bg-slate-800 border border-slate-700 shadow-sm',
   };
 
   return (

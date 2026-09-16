@@ -35,25 +35,29 @@ export default function Navbar({ activePage, setActivePage }) {
   };
 
   return (
-    <header className="bg-white border-b border-slate-200/90 sticky top-0 z-40 shadow-xs">
+    <header className="bg-white/95 backdrop-blur-md border-b border-slate-200/90 sticky top-0 z-40 shadow-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-700 to-sky-500 flex items-center justify-center text-white shadow-md shadow-sky-500/20">
-              <Boxes className="w-6 h-6 stroke-[2.2]" />
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActivePage('dashboard')}>
+            <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-gradient-to-br from-orange-50 to-amber-100 border border-orange-200/60 p-1 shadow-xs hover:scale-105 transition-transform">
+              <img
+                src="/logo-icon-transparent.png"
+                alt="Udyam Logo"
+                className="h-8 w-8 object-contain"
+              />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-sky-800 to-slate-900 bg-clip-text text-transparent">
-                  UDYAM
+                <span className="text-xl font-black tracking-tight text-slate-900">
+                  Udyam
                 </span>
-                <span className="text-[10px] uppercase font-bold tracking-widest px-1.5 py-0.5 rounded bg-sky-100 text-sky-800">
+                <span className="text-[10px] uppercase font-extrabold tracking-widest px-1.5 py-0.5 rounded bg-orange-100 text-orange-700 border border-orange-200/50">
                   ERP
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 hidden sm:block font-medium">
-                Business Operations & Inventory
+              <p className="text-[10px] text-slate-500 hidden sm:block font-bold tracking-wider uppercase">
+                Building Business. Together.
               </p>
             </div>
           </div>
@@ -68,15 +72,15 @@ export default function Navbar({ activePage, setActivePage }) {
                   key={item.id}
                   onClick={() => setActivePage(item.id)}
                   className={`
-                    flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all
+                    flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all
                     ${
                       isActive
-                        ? 'bg-sky-50 text-sky-700 font-semibold'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                        ? 'bg-orange-50/80 text-orange-700 font-semibold border border-orange-200/60 shadow-xs'
+                        : 'text-slate-600 hover:text-orange-600 hover:bg-orange-50/40'
                     }
                   `}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-sky-600' : 'text-slate-400'}`} />
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-orange-600' : 'text-slate-400'}`} />
                   {item.label}
                 </button>
               );
@@ -89,9 +93,9 @@ export default function Navbar({ activePage, setActivePage }) {
             <button
               onClick={handleSwitchRole}
               title={`Switch to ${isAdmin ? 'Sales User' : 'Admin'}`}
-              className="flex items-center gap-1.5 text-xs font-semibold py-1.5 px-2.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 transition-colors shadow-xs"
+              className="flex items-center gap-1.5 text-xs font-semibold py-1.5 px-2.5 rounded-lg border border-orange-200/80 bg-orange-50/50 hover:bg-orange-100/70 text-orange-800 transition-colors shadow-xs"
             >
-              <ArrowLeftRight className="w-3.5 h-3.5 text-slate-500" />
+              <ArrowLeftRight className="w-3.5 h-3.5 text-orange-600" />
               <span className="hidden sm:inline">Switch to {isAdmin ? 'Sales' : 'Admin'}</span>
             </button>
 
@@ -105,11 +109,13 @@ export default function Navbar({ activePage, setActivePage }) {
               </div>
 
               <div
-                className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs text-white ${
-                  isAdmin ? 'bg-purple-600' : 'bg-sky-600'
+                className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs text-white shadow-xs ${
+                  isAdmin
+                    ? 'bg-slate-900 text-orange-400 border border-slate-700'
+                    : 'bg-gradient-to-tr from-orange-500 to-amber-500 text-white shadow-brand'
                 }`}
               >
-                {isAdmin ? <Shield className="w-4 h-4" /> : <UserCheck className="w-4 h-4" />}
+                {isAdmin ? <Shield className="w-4 h-4 text-orange-400" /> : <UserCheck className="w-4 h-4" />}
               </div>
 
               {/* Logout button */}
@@ -134,7 +140,7 @@ export default function Navbar({ activePage, setActivePage }) {
                 key={item.id}
                 onClick={() => setActivePage(item.id)}
                 className={`flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-medium shrink-0 ${
-                  isActive ? 'bg-sky-50 text-sky-700 font-bold' : 'text-slate-600'
+                  isActive ? 'bg-orange-50 text-orange-700 font-bold border border-orange-200' : 'text-slate-600'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />

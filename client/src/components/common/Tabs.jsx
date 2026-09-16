@@ -21,7 +21,7 @@ export default function Tabs({
                 group inline-flex items-center gap-2 py-3 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors
                 ${
                   isActive
-                    ? 'border-sky-600 text-sky-600'
+                    ? 'border-orange-500 text-orange-600 font-semibold'
                     : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
                 }
               `}
@@ -29,7 +29,7 @@ export default function Tabs({
               {Icon && (
                 <Icon
                   className={`w-4 h-4 ${
-                    isActive ? 'text-sky-600' : 'text-slate-400 group-hover:text-slate-500'
+                    isActive ? 'text-orange-600' : 'text-slate-400 group-hover:text-slate-500'
                   }`}
                 />
               )}
@@ -38,7 +38,7 @@ export default function Tabs({
                 <span
                   className={`ml-1.5 rounded-full px-2 py-0.5 text-xs font-semibold ${
                     isActive
-                      ? 'bg-sky-100 text-sky-700'
+                      ? 'bg-orange-100 text-orange-700'
                       : 'bg-slate-100 text-slate-600 group-hover:bg-slate-200'
                   }`}
                 >

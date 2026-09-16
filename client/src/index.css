@@ -4,18 +4,18 @@
 
 @layer base {
   body {
-    @apply bg-slate-50 text-slate-800 selection:bg-sky-500 selection:text-white;
+    @apply bg-slate-50 text-slate-900 selection:bg-brand-500 selection:text-white;
   }
 }
 
-/* Custom smooth scrollbar */
+/* Custom smooth scrollbar with brand accent */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #f8fafc;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -24,5 +24,14 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #ea580c;
+}
+
+/* Brand glow effects */
+.brand-gradient {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%);
+}
+
+.brand-gradient-light {
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
 }

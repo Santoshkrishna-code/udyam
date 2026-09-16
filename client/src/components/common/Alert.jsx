@@ -10,9 +10,9 @@ export default function Alert({
 }) {
   const configs = {
     info: {
-      bg: 'bg-sky-50 border-sky-200 text-sky-900',
+      bg: 'bg-orange-50/80 border-orange-200 text-orange-950',
       icon: Info,
-      iconColor: 'text-sky-500',
+      iconColor: 'text-orange-500',
     },
     success: {
       bg: 'bg-emerald-50 border-emerald-200 text-emerald-900',
