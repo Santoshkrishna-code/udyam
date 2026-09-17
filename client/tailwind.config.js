@@ -5,28 +5,38 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          50: '#fff7ed',
-          100: '#ffedd5',
-          200: '#fed7aa',
-          300: '#fdba74',
-          400: '#fb923c',
-          500: '#f97316', // Core Udyam Orange
-          600: '#ea580c',
-          700: '#c2410c',
-          800: '#9a3412',
-          900: '#7c2d12',
-          950: '#431407',
+          50: '#FFF8F2',
+          100: '#FEEDDE',
+          200: '#FDD6BD',
+          300: '#FBB78A',
+          400: '#FA924F',
+          500: '#FF7A00', // Specification Primary Orange
+          600: '#F05A00', // Specification Dark Orange
+          700: '#C94800',
+          800: '#9E3700',
+          900: '#752800',
         },
-        dark: {
-          900: '#0b0f17',
-          850: '#101726',
-          800: '#1e293b',
-          700: '#334155',
+        navy: {
+          950: '#060B14',
+          900: '#0B1220', // Specification Navy
+          850: '#0F182B',
+          800: '#16223B',
+          700: '#233458',
         },
+        charcoal: {
+          950: '#0A0E17',
+          900: '#111827', // Specification Charcoal
+          800: '#1F2937',
+          700: '#374151',
+          600: '#4B5563',
+          500: '#64748B', // Specification Muted
+        },
+        canvas: '#F7F8FA', // Specification Background
       },
       boxShadow: {
-        'brand': '0 10px 25px -5px rgba(249, 115, 22, 0.25), 0 8px 10px -6px rgba(249, 115, 22, 0.2)',
-        'brand-lg': '0 20px 30px -10px rgba(249, 115, 22, 0.35)',
+        'subtle': '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)',
+        'card': '0 1px 3px 0 rgba(16, 24, 40, 0.06), 0 1px 2px -1px rgba(16, 24, 40, 0.04)',
+        'brand': '0 4px 14px 0 rgba(255, 122, 0, 0.25)',
       },
     },
   },

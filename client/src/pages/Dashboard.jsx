@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Card, StatCard, Button, StatusBadge, Table } from '../components/common';
+import { StatusBadge } from '../components/common';
 import api from '../api/client';
 import {
   FileSpreadsheet,
@@ -8,10 +8,11 @@ import {
   ShoppingCart,
   Boxes,
   ArrowRight,
-  TrendingUp,
-  CheckCircle2,
+  AlertTriangle,
   Clock,
-  Truck,
+  Plus,
+  ChevronRight,
+  CheckCircle2,
 } from 'lucide-react';
 
 export default function Dashboard({ setActivePage }) {
@@ -21,9 +22,11 @@ export default function Dashboard({ setActivePage }) {
     quotations: 0,
     ordersPending: 0,
     ordersConfirmed: 0,
-    lowStock: 0,
+    lowStockCount: 0,
+    pipelineValue: 0,
   });
   const [recentOrders, setRecentOrders] = useState([]);
+  const [inventorySnapshot, setInventorySnapshot] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -42,21 +45,27 @@ export default function Dashboard({ setActivePage }) {
         const orders = orderRes.data || [];
         const inventory = invRes.data || [];
 
-        const pending = orders.filter((o) => o.status === 'PENDING').length;
-        const confirmed = orders.filter((o) => o.status === 'CONFIRMED').length;
-        const low = inventory.filter((i) => i.availableQuantity <= 50).length;
+        const pendingOrders = orders.filter((o) => o.status === 'PENDING').length;
+        const confirmedOrders = orders.filter((o) => o.status === 'CONFIRMED').length;
+        const lowStock = inventory.filter((i) => (i.availableQuantity ?? 0) <= 60);
+
+        const pipeline = quotations
+          .filter((q) => q.status === 'SENT' || q.status === 'ACCEPTED' || q.status === 'DRAFT')
+          .reduce((sum, q) => sum + Number(q.totalAmount || 0), 0);
 
         setStats({
           enquiries: enquiries.length,
           quotations: quotations.length,
-          ordersPending: pending,
-          ordersConfirmed: confirmed,
-          lowStock: low,
+          ordersPending: pendingOrders,
+          ordersConfirmed: confirmedOrders,
+          lowStockCount: lowStock.length,
+          pipelineValue: pipeline,
         });
 
         setRecentOrders(orders.slice(0, 5));
+        setInventorySnapshot(inventory.slice(0, 5));
       } catch (err) {
-        console.error('Failed to load dashboard:', err);
+        console.error('Failed to load dashboard data:', err);
       } finally {
         setLoading(false);
       }
@@ -64,171 +73,377 @@ export default function Dashboard({ setActivePage }) {
     loadDashboardData();
   }, []);
 
-  const orderColumns = [
-    {
-      header: 'Order #',
-      key: 'orderNumber',
-      render: (val) => <span className="font-mono font-bold text-slate-900">{val}</span>,
-    },
-    {
-      header: 'Customer',
-      key: 'customer',
-      render: (cust) => cust?.companyName || '—',
-    },
-    {
-      header: 'Amount',
-      key: 'totalAmount',
-      render: (val) => `₹${Number(val).toLocaleString('en-IN')}`,
-    },
-    {
-      header: 'Status',
-      key: 'status',
-      render: (status) => <StatusBadge status={status} />,
-    },
-  ];
+  const formatCurrency = (val) => {
+    const num = Number(val || 0);
+    if (num >= 100000) {
+      return `₹${(num / 100000).toFixed(1)}L`;
+    }
+    return `₹${num.toLocaleString('en-IN')}`;
+  };
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 18) return 'Good afternoon';
+    return 'Good evening';
+  };
 
   return (
     <div className="space-y-6">
-      {/* Welcome Banner */}
-      <div className="rounded-2xl bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white p-6 sm:p-8 shadow-xl border border-slate-850 relative overflow-hidden">
-        {/* Subtle warm orange brand glow */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-10 -left-10 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-b from-white to-slate-100 p-2 shadow-lg shadow-orange-500/10 border border-white/20 shrink-0">
-              <img
-                src="/logo-icon-transparent.png"
-                alt="Udyam"
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <div>
-              <div className="flex items-center gap-2.5">
-                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-                  Welcome back, {user?.name}
-                </h1>
-                <StatusBadge status={user?.role} />
-              </div>
-              <p className="text-slate-300 text-sm mt-1">
-                {isAdmin
-                  ? 'Admin Control: Manage inventory, confirm sales orders, and process dispatches.'
-                  : 'Sales Dashboard: Create customer enquiries, draft quotations, and convert won deals.'}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2.5 shrink-0">
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={() => setActivePage('enquiries')}
-              className="bg-gradient-to-r from-orange-500 to-amber-600 shadow-brand hover:shadow-brand-lg border-0 font-semibold"
-            >
-              + New Enquiry
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setActivePage('quotations')}
-              className="bg-slate-800/80 hover:bg-slate-700 text-white border-slate-700 shadow-none font-semibold"
-            >
-              View Quotations
-            </Button>
-          </div>
-        </div>
-
-        {/* Operational Workflow Progress Line */}
-        <div className="relative z-10 mt-8 pt-6 border-t border-slate-800">
-          <p className="text-xs font-bold uppercase tracking-wider text-orange-400 mb-3">
-            Core Operations Lifecycle
+      {/* 1. Header with greeting and primary action */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#111827]">
+            {getGreeting()}, {user?.name?.split(' ')[0] || 'Admin'}
+          </h1>
+          <p className="text-sm text-[#64748B] mt-1">
+            Here's what's happening across your operations today.
           </p>
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 text-center text-xs">
-            <div className="bg-slate-900/80 rounded-xl p-3 border border-slate-800 hover:border-orange-500/40 transition-colors">
-              <span className="font-bold block text-white">1. Customer Enquiry</span>
-              <span className="text-[10px] text-slate-400">Multi-item requirements</span>
+        </div>
+
+        <div>
+          <button
+            type="button"
+            onClick={() => setActivePage('enquiries')}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-[#FF7A00] hover:bg-[#F05A00] transition-colors shadow-xs"
+          >
+            <Plus className="w-4 h-4" />
+            <span>New Enquiry</span>
+          </button>
+        </div>
+      </div>
+
+      {/* 2. KPI Cards (Open Enquiries, Active Quotes, Pending Orders, Low Stock) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Open Enquiries */}
+        <div
+          onClick={() => setActivePage('enquiries')}
+          className="bg-white rounded-xl border border-[#E5E7EB] p-5 shadow-card hover:border-[#D1D5DB] transition-all cursor-pointer group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-[#64748B]">Open enquiries</span>
+            <FileSpreadsheet className="w-4 h-4 text-[#94A3B8] group-hover:text-[#111827] transition-colors" />
+          </div>
+          <div className="mt-3">
+            <span className="text-3xl font-bold text-[#111827] tracking-tight">
+              {stats.enquiries}
+            </span>
+            <p className="text-xs text-[#64748B] mt-1">
+              Active customer leads
+            </p>
+          </div>
+        </div>
+
+        {/* Active Quotes */}
+        <div
+          onClick={() => setActivePage('quotations')}
+          className="bg-white rounded-xl border border-[#E5E7EB] p-5 shadow-card hover:border-[#D1D5DB] transition-all cursor-pointer group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-[#64748B]">Active quotations</span>
+            <FileCheck2 className="w-4 h-4 text-[#94A3B8] group-hover:text-[#111827] transition-colors" />
+          </div>
+          <div className="mt-3">
+            <span className="text-3xl font-bold text-[#111827] tracking-tight">
+              {stats.quotations}
+            </span>
+            <p className="text-xs text-[#64748B] mt-1">
+              {formatCurrency(stats.pipelineValue)} commercial pipeline
+            </p>
+          </div>
+        </div>
+
+        {/* Pending Orders */}
+        <div
+          onClick={() => setActivePage('sales-orders')}
+          className="bg-white rounded-xl border border-[#E5E7EB] p-5 shadow-card hover:border-[#D1D5DB] transition-all cursor-pointer group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-[#64748B]">Pending orders</span>
+            <ShoppingCart className="w-4 h-4 text-[#94A3B8] group-hover:text-[#111827] transition-colors" />
+          </div>
+          <div className="mt-3">
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-bold text-[#111827] tracking-tight">
+                {stats.ordersPending}
+              </span>
+              {stats.ordersPending > 0 && (
+                <span className="text-[11px] font-medium text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                  Needs review
+                </span>
+              )}
             </div>
-            <div className="bg-slate-900/80 rounded-xl p-3 border border-slate-800 hover:border-orange-500/40 transition-colors">
-              <span className="font-bold block text-white">2. Quotation Engine</span>
-              <span className="text-[10px] text-slate-400">Discount & GST math</span>
+            <p className="text-xs text-[#64748B] mt-1">
+              Awaiting stock confirmation
+            </p>
+          </div>
+        </div>
+
+        {/* Low Stock (Primary Inventory KPI) */}
+        <div
+          onClick={() => setActivePage('inventory')}
+          className="bg-white rounded-xl border border-[#E5E7EB] p-5 shadow-card hover:border-[#D1D5DB] transition-all cursor-pointer group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-[#64748B]">Low stock items</span>
+            <Boxes className="w-4 h-4 text-[#94A3B8] group-hover:text-[#111827] transition-colors" />
+          </div>
+          <div className="mt-3">
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-bold text-[#111827] tracking-tight">
+                {stats.lowStockCount}
+              </span>
+              <span className="text-xs text-[#64748B]">products</span>
+              {stats.lowStockCount > 0 && (
+                <span className="text-[11px] font-medium text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full ml-auto">
+                  Alert
+                </span>
+              )}
             </div>
-            <div className="bg-slate-900/80 rounded-xl p-3 border border-slate-800 hover:border-orange-500/40 transition-colors">
-              <span className="font-bold block text-white">3. Sales Order</span>
-              <span className="text-[10px] text-slate-400">Status: Pending</span>
-            </div>
-            <div className="bg-slate-900/80 rounded-xl p-3 border border-slate-800 hover:border-orange-500/40 transition-colors">
-              <span className="font-bold block text-white">4. Stock Reservation</span>
-              <span className="text-[10px] text-orange-300 font-medium">Atomic Row Lock</span>
-            </div>
-            <div className="bg-slate-900/80 rounded-xl p-3 border border-slate-800 hover:border-orange-500/40 transition-colors">
-              <span className="font-bold block text-white">5. Product Dispatch</span>
-              <span className="text-[10px] text-emerald-400 font-medium">Physical Stock Reduced</span>
-            </div>
+            <p className="text-xs text-[#64748B] mt-1">
+              Below reorder threshold
+            </p>
           </div>
         </div>
       </div>
 
-      {/* KPI Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard
-          label="Total Enquiries"
-          value={stats.enquiries}
-          icon={FileSpreadsheet}
-          color="orange"
-          subtext="Active customer leads"
-          onClick={() => setActivePage('enquiries')}
-        />
-        <StatCard
-          label="Quotations"
-          value={stats.quotations}
-          icon={FileCheck2}
-          color="amber"
-          subtext="Drafted or accepted"
-          onClick={() => setActivePage('quotations')}
-        />
-        <StatCard
-          label="Orders Awaiting Confirmation"
-          value={stats.ordersPending}
-          icon={Clock}
-          color="purple"
-          subtext="Needs Admin reservation"
-          onClick={() => setActivePage('sales-orders')}
-        />
-        <StatCard
-          label="Confirmed Ready to Dispatch"
-          value={stats.ordersConfirmed}
-          icon={Truck}
-          color="emerald"
-          subtext="Stock safely reserved"
-          onClick={() => setActivePage('sales-orders')}
-        />
+      {/* 3. ACTION REQUIRED SECTION */}
+      <div className="bg-white rounded-xl border border-[#E5E7EB] shadow-card overflow-hidden">
+        <div className="px-5 py-4 border-b border-[#F1F5F9] flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#FF7A00]" />
+            <h2 className="text-xs font-bold uppercase tracking-wider text-[#374151]">
+              Action Required
+            </h2>
+          </div>
+          <span className="text-xs text-[#94A3B8]">Prioritized operational tasks</span>
+        </div>
+
+        <div className="divide-y divide-[#F1F5F9]">
+          {/* Action 1: Pending Orders */}
+          <div
+            onClick={() => setActivePage('sales-orders')}
+            className="px-5 py-3.5 flex items-center justify-between hover:bg-[#F8FAFC] transition-colors cursor-pointer group"
+          >
+            <div className="flex items-start gap-3">
+              <div className="p-1.5 rounded-lg bg-amber-50 text-amber-600 shrink-0 mt-0.5">
+                <AlertTriangle className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-[#111827] group-hover:text-[#FF7A00] transition-colors">
+                  {stats.ordersPending > 0
+                    ? `${stats.ordersPending} Sales Orders awaiting stock reservation`
+                    : 'All current sales orders are processed'}
+                </p>
+                <p className="text-xs text-[#64748B]">
+                  {stats.ordersPending > 0
+                    ? 'Review line item availability and commit inventory reservations'
+                    : 'No pending orders requiring stock confirmation right now'}
+                </p>
+              </div>
+            </div>
+            <ChevronRight className="w-4 h-4 text-[#94A3B8] group-hover:text-[#111827] transition-colors" />
+          </div>
+
+          {/* Action 2: Low Stock Warning */}
+          <div
+            onClick={() => setActivePage('inventory')}
+            className="px-5 py-3.5 flex items-center justify-between hover:bg-[#F8FAFC] transition-colors cursor-pointer group"
+          >
+            <div className="flex items-start gap-3">
+              <div className="p-1.5 rounded-lg bg-amber-50 text-amber-600 shrink-0 mt-0.5">
+                <Boxes className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-[#111827] group-hover:text-[#FF7A00] transition-colors">
+                  {stats.lowStockCount > 0
+                    ? `${stats.lowStockCount} products below reorder threshold`
+                    : 'Inventory stock levels are healthy'}
+                </p>
+                <p className="text-xs text-[#64748B]">
+                  Monitor physical vs reserved balances to prevent order fulfillment delays
+                </p>
+              </div>
+            </div>
+            <ChevronRight className="w-4 h-4 text-[#94A3B8] group-hover:text-[#111827] transition-colors" />
+          </div>
+
+          {/* Action 3: Quotations */}
+          <div
+            onClick={() => setActivePage('quotations')}
+            className="px-5 py-3.5 flex items-center justify-between hover:bg-[#F8FAFC] transition-colors cursor-pointer group"
+          >
+            <div className="flex items-start gap-3">
+              <div className="p-1.5 rounded-lg bg-blue-50 text-blue-600 shrink-0 mt-0.5">
+                <Clock className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-[#111827] group-hover:text-[#FF7A00] transition-colors">
+                  {stats.quotations} commercial proposals in active pipeline
+                </p>
+                <p className="text-xs text-[#64748B]">
+                  Follow up with customers on pending quotations to advance to sales order conversion
+                </p>
+              </div>
+            </div>
+            <ChevronRight className="w-4 h-4 text-[#94A3B8] group-hover:text-[#111827] transition-colors" />
+          </div>
+        </div>
       </div>
 
-      {/* Recent Orders Overview */}
-      <Card
-        title="Recent Sales Orders"
-        subtitle="Live tracking of orders, reservations, and dispatch status"
-        headerAction={
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setActivePage('sales-orders')}
-            className="text-orange-600 hover:text-orange-700 font-semibold"
-          >
-            View All <ArrowRight className="w-3.5 h-3.5 ml-1" />
-          </Button>
-        }
-        noPadding
-      >
-        <Table
-          columns={orderColumns}
-          data={recentOrders}
-          emptyMessage="No sales orders created yet. Convert an accepted quotation to get started!"
-          isLoading={loading}
-          onRowClick={() => setActivePage('sales-orders')}
-        />
-      </Card>
+      {/* 4. Two-Column Grid: Recent Sales Orders (60%) + Inventory Snapshot (40%) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Left: Recent Sales Orders (7 cols on lg) */}
+        <div className="lg:col-span-7 bg-white rounded-xl border border-[#E5E7EB] shadow-card overflow-hidden">
+          <div className="px-5 py-4 border-b border-[#F1F5F9] flex items-center justify-between">
+            <div>
+              <h2 className="text-sm font-bold text-[#111827]">Recent Sales Orders</h2>
+              <p className="text-xs text-[#64748B] mt-0.5">Orders tracked through fulfillment</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setActivePage('sales-orders')}
+              className="text-xs font-semibold text-[#FF7A00] hover:text-[#F05A00] flex items-center gap-1 transition-colors"
+            >
+              <span>View all</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-[#F1F5F9] text-left text-xs">
+              <thead className="bg-[#F8FAFC] font-semibold text-[#64748B]">
+                <tr>
+                  <th className="px-4 py-3">Order</th>
+                  <th className="px-4 py-3">Customer</th>
+                  <th className="px-4 py-3 text-right">Amount</th>
+                  <th className="px-4 py-3 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#F8FAFC]">
+                {loading ? (
+                  <tr>
+                    <td colSpan={4} className="px-4 py-8 text-center text-[#94A3B8]">
+                      Loading orders...
+                    </td>
+                  </tr>
+                ) : recentOrders.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="px-4 py-8 text-center text-[#94A3B8]">
+                      No orders created yet. Convert an accepted quotation to start.
+                    </td>
+                  </tr>
+                ) : (
+                  recentOrders.map((order) => (
+                    <tr
+                      key={order.id}
+                      onClick={() => setActivePage('sales-orders')}
+                      className="hover:bg-[#F8FAFC] cursor-pointer transition-colors"
+                    >
+                      <td className="px-4 py-3 font-mono font-bold text-[#111827]">
+                        {order.orderNumber}
+                      </td>
+                      <td className="px-4 py-3 text-[#374151] truncate max-w-[160px]">
+                        {order.customer?.companyName || '—'}
+                      </td>
+                      <td className="px-4 py-3 text-right font-semibold text-[#111827]">
+                        ₹{Number(order.totalAmount || 0).toLocaleString('en-IN')}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <StatusBadge status={order.status} />
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Right: Compact Inventory Snapshot (5 cols on lg) */}
+        <div className="lg:col-span-5 bg-white rounded-xl border border-[#E5E7EB] shadow-card overflow-hidden flex flex-col justify-between">
+          <div>
+            <div className="px-5 py-4 border-b border-[#F1F5F9] flex items-center justify-between">
+              <div>
+                <h2 className="text-sm font-bold text-[#111827]">Inventory Snapshot</h2>
+                <p className="text-xs text-[#64748B] mt-0.5">Physical vs reserved balance</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActivePage('inventory')}
+                className="text-xs font-semibold text-[#FF7A00] hover:text-[#F05A00] flex items-center gap-1 transition-colors"
+              >
+                <span>View inventory</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-[#F1F5F9] text-left text-xs">
+                <thead className="bg-[#F8FAFC] font-semibold text-[#64748B]">
+                  <tr>
+                    <th className="px-4 py-3">Product</th>
+                    <th className="px-3 py-3 text-right">Physical</th>
+                    <th className="px-3 py-3 text-right">Reserved</th>
+                    <th className="px-4 py-3 text-right">Available</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#F8FAFC]">
+                  {loading ? (
+                    <tr>
+                      <td colSpan={4} className="px-4 py-8 text-center text-[#94A3B8]">
+                        Loading stock...
+                      </td>
+                    </tr>
+                  ) : inventorySnapshot.length === 0 ? (
+                    <tr>
+                      <td colSpan={4} className="px-4 py-8 text-center text-[#94A3B8]">
+                        No inventory data found.
+                      </td>
+                    </tr>
+                  ) : (
+                    inventorySnapshot.map((item) => {
+                      const isLow = (item.availableQuantity ?? 0) <= 60;
+                      return (
+                        <tr
+                          key={item.id}
+                          onClick={() => setActivePage('inventory')}
+                          className="hover:bg-[#F8FAFC] cursor-pointer transition-colors"
+                        >
+                          <td className="px-4 py-3 text-[#111827] font-medium truncate max-w-[140px]">
+                            {item.productName}
+                          </td>
+                          <td className="px-3 py-3 text-right text-[#64748B]">
+                            {item.physicalQuantity}
+                          </td>
+                          <td className="px-3 py-3 text-right text-amber-700 font-medium">
+                            {item.reservedQuantity}
+                          </td>
+                          <td className="px-4 py-3 text-right">
+                            <span
+                              className={`font-bold inline-flex items-center gap-1 ${
+                                isLow ? 'text-amber-600' : 'text-[#111827]'
+                              }`}
+                            >
+                              {item.availableQuantity}
+                              {isLow && <span title="Low stock alert" className="text-amber-500">⚠</span>}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="px-5 py-3 border-t border-[#F1F5F9] bg-[#F8FAFC] text-[11px] text-[#64748B] flex items-center justify-between">
+            <span>Formula: Available = Physical − Reserved</span>
+            <span className="font-semibold text-emerald-600">Real-time sync</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

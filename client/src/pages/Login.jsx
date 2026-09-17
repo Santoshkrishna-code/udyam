@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Button, Input, Card, Alert } from '../components/common';
-import { Boxes, Shield, UserCheck, ArrowRight } from 'lucide-react';
+import { Button, Alert } from '../components/common';
+import { ArrowRight, ShieldCheck, CheckCircle2, ChevronDown } from 'lucide-react';
 
 export default function Login() {
   const { login, quickLogin } = useAuth();
@@ -9,6 +9,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showDemoOptions, setShowDemoOptions] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,45 +24,100 @@ export default function Login() {
     }
   };
 
-  const handleDemoLogin = async (role) => {
+  const handleQuickFill = async (role) => {
     setError('');
     setLoading(true);
     try {
       await quickLogin(role);
     } catch (err) {
-      setError(err.message || 'Demo login failed');
+      setError(err.message || 'Quick login failed');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-[#0B0F17] relative overflow-hidden">
-      {/* Ambient background glow matching Udyam warm orange */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[450px] bg-gradient-to-b from-orange-500/15 via-amber-500/10 to-transparent blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-orange-600/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen flex flex-col md:flex-row bg-[#F7F8FA] text-[#111827]">
+      {/* Left Side: Industrial Dark Brand Panel */}
+      <div className="md:w-5/12 lg:w-9/20 bg-[#0B1220] p-8 sm:p-12 lg:p-16 flex flex-col justify-between relative overflow-hidden text-white border-b md:border-b-0 md:border-r border-[#1E293B]">
+        {/* Subtle industrial grid overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.03] pointer-events-none"
+          style={{
+            backgroundImage: `radial-gradient(#FFFFFF 1px, transparent 1px)`,
+            backgroundSize: '24px 24px',
+          }}
+        />
+        {/* Subtle orange ambient glow */}
+        <div className="absolute top-12 left-12 w-64 h-64 bg-[#FF7A00]/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center relative z-10">
-        {/* Official Udyam Logo Lockup */}
-        <div className="inline-flex flex-col items-center justify-center mb-6">
-          <div className="w-24 h-24 rounded-3xl bg-gradient-to-b from-white to-slate-100 p-2.5 shadow-2xl shadow-orange-500/20 border border-white/20 hover:scale-105 transition-transform duration-300">
-            <img
-              src="/logo-icon-transparent.png"
-              alt="Udyam Logo Mark"
-              className="w-full h-full object-contain"
-            />
+        <div className="relative z-10">
+          {/* Logo & Brand */}
+          <div className="flex items-center gap-3.5 mb-12">
+            <div className="w-11 h-11 rounded-xl bg-white p-2 flex items-center justify-center shadow-md">
+              <img
+                src="/logo-icon-transparent.png"
+                alt="Udyam"
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <div>
+              <span className="text-2xl font-bold tracking-tight text-white">Udyam</span>
+              <span className="ml-2 text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#FF7A00]/20 text-[#FF7A00] border border-[#FF7A00]/30">
+                ERP
+              </span>
+            </div>
           </div>
-          <h1 className="text-3xl font-black text-white tracking-tight mt-4">
-            Udyam
-          </h1>
-          <p className="text-[11px] text-orange-400 font-bold tracking-[0.25em] uppercase mt-1">
-            Building Business. Together.
-          </p>
+
+          {/* Heading */}
+          <div className="max-w-md">
+            <h2 className="text-2xl lg:text-3xl font-bold tracking-tight text-white leading-tight">
+              Business Operations <br className="hidden sm:inline" />& Inventory Platform
+            </h2>
+            <p className="mt-3 text-sm text-[#94A3B8] leading-relaxed">
+              Manage every customer order seamlessly from enquiry and commercial quotation to atomic inventory reservation and product dispatch.
+            </p>
+          </div>
+
+          {/* Industrial Workflow Timeline */}
+          <div className="mt-10 space-y-3 max-w-sm">
+            <div className="flex items-start gap-3 text-xs text-[#CBD5E1]">
+              <CheckCircle2 className="w-4 h-4 text-[#FF7A00] shrink-0 mt-0.5" />
+              <span>Multi-item customer enquiries and commercial quotation engine</span>
+            </div>
+            <div className="flex items-start gap-3 text-xs text-[#CBD5E1]">
+              <CheckCircle2 className="w-4 h-4 text-[#FF7A00] shrink-0 mt-0.5" />
+              <span>Strict transactional sales order conversion</span>
+            </div>
+            <div className="flex items-start gap-3 text-xs text-[#CBD5E1]">
+              <CheckCircle2 className="w-4 h-4 text-[#FF7A00] shrink-0 mt-0.5" />
+              <span>Atomic stock reservation with concurrency safety</span>
+            </div>
+            <div className="flex items-start gap-3 text-xs text-[#CBD5E1]">
+              <CheckCircle2 className="w-4 h-4 text-[#FF7A00] shrink-0 mt-0.5" />
+              <span>Strict physical deduction upon verified dispatch</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer brand promise */}
+        <div className="relative z-10 pt-8 border-t border-[#1E293B]/80 text-xs text-[#64748B]">
+          Building Business. Together. &copy; {new Date().getFullYear()} Udyam Operations.
         </div>
       </div>
 
-      <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4">
-        <div className="bg-slate-900/90 backdrop-blur-xl rounded-2xl border border-slate-800 shadow-2xl shadow-black/60 p-8">
+      {/* Right Side: Clean Enterprise Sign-in Panel */}
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-12 lg:p-16">
+        <div className="w-full max-w-md">
+          <div className="mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#111827] tracking-tight">
+              Welcome back
+            </h1>
+            <p className="text-sm text-[#64748B] mt-1.5">
+              Sign in to your enterprise workspace
+            </p>
+          </div>
+
           {error && (
             <Alert
               type="error"
@@ -71,80 +127,94 @@ export default function Login() {
             />
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Email Address
+              <label
+                htmlFor="email"
+                className="block text-xs font-semibold uppercase tracking-wider text-[#374151] mb-1.5"
+              >
+                Work Email
               </label>
               <input
+                id="email"
                 type="email"
-                placeholder="user@udyam.local"
+                placeholder="name@company.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="block w-full rounded-lg border border-slate-700 bg-slate-800/80 text-white placeholder-slate-500 text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                className="block w-full rounded-lg border border-[#D1D5DB] bg-white text-[#111827] text-sm px-3.5 py-2.5 placeholder-[#9CA3AF] focus:outline-none focus:ring-2 focus:ring-[#FF7A00] focus:border-[#FF7A00] transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Password
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label
+                  htmlFor="password"
+                  className="block text-xs font-semibold uppercase tracking-wider text-[#374151]"
+                >
+                  Password
+                </label>
+              </div>
               <input
+                id="password"
                 type="password"
-                placeholder="••••••••"
+                placeholder="••••••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="block w-full rounded-lg border border-slate-700 bg-slate-800/80 text-white placeholder-slate-500 text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                className="block w-full rounded-lg border border-[#D1D5DB] bg-white text-[#111827] text-sm px-3.5 py-2.5 placeholder-[#9CA3AF] focus:outline-none focus:ring-2 focus:ring-[#FF7A00] focus:border-[#FF7A00] transition-all"
               />
             </div>
 
-            <Button
+            <button
               type="submit"
-              variant="primary"
-              fullWidth
-              size="lg"
-              isLoading={loading}
-              className="mt-3 bg-gradient-to-r from-orange-500 via-orange-600 to-amber-600 shadow-brand hover:shadow-brand-lg"
+              disabled={loading}
+              className="w-full inline-flex items-center justify-center font-semibold rounded-lg text-sm px-4 py-2.5 text-white bg-[#FF7A00] hover:bg-[#F05A00] active:scale-[0.99] transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF7A00] focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Sign In to ERP <ArrowRight className="w-4 h-4 ml-1.5" />
-            </Button>
+              {loading ? 'Signing in...' : 'Sign in'}
+              {!loading && <ArrowRight className="w-4 h-4 ml-1.5" />}
+            </button>
           </form>
 
-          {/* Quick Demo Access Bar */}
-          <div className="mt-8 pt-6 border-t border-slate-800">
-            <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 text-center mb-3">
-              One-Click Instant Demo Access
-            </p>
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => handleDemoLogin('ADMIN')}
-                disabled={loading}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-750 hover:border-orange-500/60 text-white text-xs font-semibold transition-all hover:scale-[1.02] shadow-sm"
-              >
-                <div className="w-5 h-5 rounded-md bg-slate-950 flex items-center justify-center text-orange-400">
-                  <Shield className="w-3.5 h-3.5" />
-                </div>
-                <span>Admin</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleDemoLogin('SALES_USER')}
-                disabled={loading}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border border-orange-500/30 bg-orange-500/10 hover:bg-orange-500/20 text-orange-300 text-xs font-semibold transition-all hover:scale-[1.02] shadow-sm"
-              >
-                <div className="w-5 h-5 rounded-md bg-orange-500 text-white flex items-center justify-center">
-                  <UserCheck className="w-3.5 h-3.5" />
-                </div>
-                <span>Sales User</span>
-              </button>
+          {/* Security & Access Badge */}
+          <div className="mt-8 pt-6 border-t border-[#E5E7EB] flex items-center justify-between text-xs text-[#64748B]">
+            <div className="flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              <span>Secure business access</span>
             </div>
-            <div className="mt-4 text-center">
-              <p className="text-[11px] text-slate-500">
-                Demo: <span className="text-slate-400 font-mono">admin@udyam.local</span> / <span className="text-slate-400 font-mono">sales@udyam.local</span>
-              </p>
+            
+            {/* Discreet demo helper for rapid testing without dominating the production UI */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowDemoOptions(!showDemoOptions)}
+                className="text-xs text-[#64748B] hover:text-[#111827] flex items-center gap-1 font-medium transition-colors"
+              >
+                <span>Demo access</span>
+                <ChevronDown className={`w-3 h-3 transition-transform ${showDemoOptions ? 'rotate-180' : ''}`} />
+              </button>
+
+              {showDemoOptions && (
+                <div className="absolute right-0 bottom-6 w-48 bg-white rounded-lg shadow-lg border border-[#E5E7EB] p-2 text-xs z-20 animate-in fade-in-50">
+                  <p className="text-[10px] font-bold text-[#9CA3AF] uppercase tracking-wider px-2 py-1">
+                    Instant Demo Login
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => handleQuickFill('ADMIN')}
+                    className="w-full text-left px-2 py-1.5 rounded hover:bg-[#F7F8FA] font-medium text-[#111827]"
+                  >
+                    Administrator
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleQuickFill('SALES_USER')}
+                    className="w-full text-left px-2 py-1.5 rounded hover:bg-[#F7F8FA] font-medium text-[#111827]"
+                  >
+                    Sales Representative
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
