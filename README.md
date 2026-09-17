@@ -288,6 +288,30 @@ Application available at **http://localhost:5000**.
    cd server && NODE_ENV=production node src/server.js
    ```
 
+### Option 4: Serverless Deployment with Neon & Vercel (1-Click)
+
+Full step-by-step documentation is available in [docs/deployment-vercel-neon.md](docs/deployment-vercel-neon.md).
+
+1. **Database on Neon**:
+   - Create a free project on [neon.tech](https://neon.tech).
+   - Copy the **Pooled Connection String** (`DATABASE_URL`) and **Direct Connection String** (`DIRECT_URL`).
+   - Push schema & seed from local terminal:
+     ```bash
+     cd server
+     DATABASE_URL="your_neon_pooled_url" DIRECT_URL="your_neon_direct_url" npx prisma db push
+     DATABASE_URL="your_neon_pooled_url" DIRECT_URL="your_neon_direct_url" node prisma/seed.js
+     ```
+
+2. **Deploy on Vercel**:
+   - Import the repository into [vercel.com/new](https://vercel.com/new).
+   - The included `vercel.json` and `api/index.js` automatically configure the serverless build and routing.
+   - Add Environment Variables in Vercel Dashboard:
+     - `DATABASE_URL`: Neon pooled connection (`-pooler`)
+     - `DIRECT_URL`: Neon direct connection
+     - `JWT_SECRET`: Random secure string
+     - `NODE_ENV`: `production`
+   - Click **Deploy**!
+
 ### Environment Variables Reference
 
 | Variable | Required | Default | Description |
