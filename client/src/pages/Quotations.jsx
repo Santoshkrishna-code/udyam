@@ -192,7 +192,7 @@ export default function Quotations({ preselectedEnquiry, setActivePage }) {
     {
       header: 'Quotation #',
       key: 'quotationNumber',
-      render: (val) => <span className="font-mono font-bold text-sky-700">{val}</span>,
+      render: (val) => <span className="font-mono font-bold text-orange-700">{val}</span>,
     },
     {
       header: 'Enquiry Ref',
@@ -382,7 +382,7 @@ export default function Quotations({ preselectedEnquiry, setActivePage }) {
                 variant="ghost"
                 size="sm"
                 onClick={handleAddItem}
-                className="text-sky-600 hover:text-sky-700 text-xs font-semibold py-1 px-2"
+                className="text-orange-600 hover:text-orange-700 text-xs font-semibold py-1 px-2"
               >
                 + Add Item
               </Button>

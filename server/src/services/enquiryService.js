@@ -76,7 +76,7 @@ class EnquiryService {
       }
     }
 
-    return prisma.$transaction(async (tx) =\u003e {
+    return prisma.$transaction(async (tx) => {
       const year = new Date().getFullYear();
       const prefix = `ENQ-${year}-`;
 

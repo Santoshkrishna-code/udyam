@@ -85,7 +85,7 @@ export default function Inventory() {
     {
       header: 'Code',
       key: 'productCode',
-      render: (val) => <span className="font-mono font-bold text-sky-700">{val}</span>,
+      render: (val) => <span className="font-mono font-bold text-orange-700">{val}</span>,
     },
     {
       header: 'Product Name',
@@ -167,7 +167,7 @@ export default function Inventory() {
         <div>
           <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Inventory Master</h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            Real-time stock tracking. Invariant: <code className="font-mono bg-slate-100 px-1 py-0.5 rounded text-sky-800">Available = Physical - Reserved</code>
+            Real-time stock tracking. Invariant: <code className="font-mono bg-orange-50 border border-orange-200 px-1.5 py-0.5 rounded text-orange-800">Available = Physical - Reserved</code>
           </p>
         </div>
 

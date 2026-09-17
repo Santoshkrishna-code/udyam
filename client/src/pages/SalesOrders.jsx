@@ -132,7 +132,7 @@ export default function SalesOrders() {
     {
       header: 'Order #',
       key: 'orderNumber',
-      render: (val) => <span className="font-mono font-bold text-sky-700">{val}</span>,
+      render: (val) => <span className="font-mono font-bold text-orange-700">{val}</span>,
     },
     {
       header: 'Customer',
@@ -325,7 +325,7 @@ export default function SalesOrders() {
             {/* Order Items with Live Availability Table */}
             <div>
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-3 flex items-center gap-1.5">
-                <Boxes className="w-4 h-4 text-sky-600" />
+                <Boxes className="w-4 h-4 text-orange-600" />
                 Line Items & Inventory Reservation Status
               </h4>
 
@@ -337,7 +337,7 @@ export default function SalesOrders() {
                       <th className="px-3.5 py-2.5 text-right">Required</th>
                       <th className="px-3.5 py-2.5 text-right">Physical Stock</th>
                       <th className="px-3.5 py-2.5 text-right">Reserved Stock</th>
-                      <th className="px-3.5 py-2.5 text-right font-bold text-sky-800">Available Stock</th>
+                      <th className="px-3.5 py-2.5 text-right font-bold text-orange-800">Available Stock</th>
                       <th className="px-3.5 py-2.5 text-center">Status</th>
                     </tr>
                   </thead>
@@ -358,7 +358,7 @@ export default function SalesOrders() {
                           <td className="px-3.5 py-2.5 text-right text-amber-700 font-medium">
                             {stock.reservedQuantity ?? '—'}
                           </td>
-                          <td className="px-3.5 py-2.5 text-right font-extrabold text-sky-700 bg-sky-50/40">
+                          <td className="px-3.5 py-2.5 text-right font-extrabold text-orange-700 bg-orange-50/40">
                             {stock.availableQuantity ?? '—'}
                           </td>
                           <td className="px-3.5 py-2.5 text-center">
@@ -442,9 +442,9 @@ export default function SalesOrders() {
           }
         >
           <form onSubmit={handleProcessDispatch} className="space-y-4">
-            <div className="bg-sky-50 p-3.5 rounded-xl border border-sky-100 text-xs text-sky-900">
-              <p className="font-semibold mb-1">Dispatching for Customer:</p>
-              <p>{dispatchOrder.customer?.companyName} ({dispatchOrder.customer?.city})</p>
+            <div className="bg-orange-50 p-3.5 rounded-xl border border-orange-200/70 text-xs text-orange-950">
+              <p className="font-bold mb-0.5 text-orange-900">Dispatching for Customer:</p>
+              <p className="font-medium text-orange-800">{dispatchOrder.customer?.companyName} ({dispatchOrder.customer?.city})</p>
             </div>
 
             <Input

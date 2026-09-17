@@ -104,7 +104,7 @@ export default function Customers() {
       header: 'Email',
       key: 'email',
       render: (val) => (
-        <span className="text-xs text-sky-700 flex items-center gap-1">
+        <span className="text-xs text-orange-700 flex items-center gap-1">
           <Mail className="w-3 h-3 text-slate-400" /> {val}
         </span>
       ),
@@ -115,7 +115,7 @@ export default function Customers() {
       align: 'center',
       render: (counts) => (
         <div className="flex items-center justify-center gap-2 text-xs">
-          <span className="bg-sky-50 text-sky-700 px-2 py-0.5 rounded font-medium" title="Enquiries">
+          <span className="bg-orange-50 text-orange-700 px-2 py-0.5 rounded font-medium" title="Enquiries">
             {counts?.enquiries || 0} Enq
           </span>
           <span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-medium" title="Quotations">

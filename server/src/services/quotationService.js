@@ -82,9 +82,22 @@ class QuotationService {
     const { calculatedItems, grandTotal } = calculateQuotationTotals(items);
 
     return prisma.$transaction(async (tx) => {
-      const count = await tx.quotation.count();
       const year = new Date().getFullYear();
-      const quotationNumber = `QTN-${year}-${String(count + 1).padStart(4, '0')}`;
+      const prefix = `QTN-${year}-`;
+
+      const latest = await tx.quotation.findFirst({
+        where: { quotationNumber: { startsWith: prefix } },
+        orderBy: { quotationNumber: 'desc' },
+        select: { quotationNumber: true },
+      });
+
+      let nextSeq = 1;
+      if (latest) {
+        const parts = latest.quotationNumber.split('-');
+        nextSeq = parseInt(parts[2], 10) + 1;
+      }
+
+      const quotationNumber = `${prefix}${String(nextSeq).padStart(4, '0')}`;
 
       const quotation = await tx.quotation.create({
         data: {

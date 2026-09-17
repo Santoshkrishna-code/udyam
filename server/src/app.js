@@ -42,12 +42,14 @@ app.use('/api/sales-orders', salesOrderRoutes);
 // --- Production: Serve React SPA ---
 const path = require('path');
 const clientDistPath = path.join(__dirname, '../../client/dist');
+const clientPublicPath = path.join(__dirname, '../../client/public');
 
 if (process.env.NODE_ENV === 'production') {
-  // Serve static assets from the production build
+  // Serve compiled production build FIRST (contains index.html with injected bundle script)
   app.use(express.static(clientDistPath));
+  app.use(express.static(clientPublicPath));
 
-  // SPA fallback: serve index.html for all non-API GET requests
+  // SPA fallback: serve index.html from dist for all non-API GET requests
   app.get('*', (req, res) => {
     res.sendFile(path.join(clientDistPath, 'index.html'));
   });

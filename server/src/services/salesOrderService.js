@@ -144,9 +144,22 @@ class SalesOrderService {
       }
 
       // 4. Generate order number
-      const count = await tx.salesOrder.count();
       const year = new Date().getFullYear();
-      const orderNumber = `SO-${year}-${String(count + 1).padStart(4, '0')}`;
+      const prefix = `SO-${year}-`;
+
+      const latest = await tx.salesOrder.findFirst({
+        where: { orderNumber: { startsWith: prefix } },
+        orderBy: { orderNumber: 'desc' },
+        select: { orderNumber: true },
+      });
+
+      let nextSeq = 1;
+      if (latest) {
+        const parts = latest.orderNumber.split('-');
+        nextSeq = parseInt(parts[2], 10) + 1;
+      }
+
+      const orderNumber = `${prefix}${String(nextSeq).padStart(4, '0')}`;
 
       // 5. Create Sales Order
       const salesOrder = await tx.salesOrder.create({

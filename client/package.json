@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "webpack serve --mode development --config webpack.config.js --port 3000 --hot",
-    "build": "webpack --mode production --config webpack.config.js"
+    "build": "webpack --mode production --config webpack.config.js && cp public/*.png dist/ 2>/dev/null || true"
   },
   "dependencies": {
     "axios": "^1.7.7",

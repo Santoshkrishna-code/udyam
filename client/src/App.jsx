@@ -18,7 +18,7 @@ function AppContent() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50">
-        <Loader2 className="w-8 h-8 animate-spin text-sky-600 mb-2" />
+        <Loader2 className="w-8 h-8 animate-spin text-orange-600 mb-2" />
         <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
           Loading UDYAM ERP...
         </span>

@@ -108,7 +108,7 @@ export default function Enquiries({ setActivePage, onSelectEnquiryForQuote }) {
     {
       header: 'Enquiry #',
       key: 'enquiryNumber',
-      render: (val) => <span className="font-mono font-bold text-sky-700">{val}</span>,
+      render: (val) => <span className="font-mono font-bold text-orange-700">{val}</span>,
     },
     {
       header: 'Customer',
@@ -259,7 +259,7 @@ export default function Enquiries({ setActivePage, onSelectEnquiryForQuote }) {
                 variant="ghost"
                 size="sm"
                 onClick={handleAddItem}
-                className="text-sky-600 hover:text-sky-700 text-xs font-semibold py-1 px-2"
+                className="text-orange-600 hover:text-orange-700 text-xs font-semibold py-1 px-2"
               >
                 + Add Product
               </Button>

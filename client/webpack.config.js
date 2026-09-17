@@ -39,9 +39,6 @@ module.exports = {
       template: './public/index.html',
       title: 'UDYAM — Operations & Inventory ERP',
     }),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-    }),
   ],
   devServer: {
     port: 3000,
