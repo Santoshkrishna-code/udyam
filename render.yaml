@@ -1,0 +1,28 @@
+# ==============================================================================
+# UDYAM ERP — RENDER BLUEPRINT CONFIGURATION (render.yaml)
+# ==============================================================================
+# Deploy backend as a Web Service on Render.com connected to Neon PostgreSQL
+# ==============================================================================
+
+services:
+  - type: web
+    name: udyam-backend
+    env: node
+    plan: free
+    region: oregon # Options: oregon, frankfurt, ohio, singapore
+    rootDir: server
+    buildCommand: npm install && npx prisma generate
+    startCommand: node src/server.js
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        sync: false # Set your Neon connection string in the Render Dashboard
+      - key: JWT_SECRET
+        generateValue: true # Render will automatically generate a secure random string
+      - key: JWT_EXPIRES_IN
+        value: 7d

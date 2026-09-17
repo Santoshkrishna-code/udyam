@@ -269,24 +269,15 @@ cd server && NODE_ENV=production node src/server.js
 
 Application available at **http://localhost:5000**.
 
-### Option 3: PaaS Deployment (Render / Railway / Heroku)
+### Option 3: Backend on Render + Neon Database
 
-1. **Create a PostgreSQL database** on your platform.
-2. **Set environment variables** on the platform:
-   ```
-   DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DB_NAME?schema=public
-   JWT_SECRET=your_strong_production_secret
-   NODE_ENV=production
-   PORT=5000
-   ```
-3. **Set build command**:
-   ```bash
-   cd client && npm install && npm run build && cd ../server && npm install && npx prisma db push && node prisma/seed.js
-   ```
-4. **Set start command**:
-   ```bash
-   cd server && NODE_ENV=production node src/server.js
-   ```
+Full step-by-step documentation is available in [docs/deployment-render.md](docs/deployment-render.md).
+
+The repository includes a pre-configured [`render.yaml`](render.yaml) Blueprint:
+1. In Render Dashboard, click **New +** → **Blueprint** and connect your GitHub repository.
+2. Enter your Neon `DATABASE_URL` and click **Apply**.
+3. Render will build and deploy the backend at `https://your-backend.onrender.com`.
+4. Point your Vercel frontend to the backend by setting `REACT_APP_API_URL=https://your-backend.onrender.com/api`.
 
 ### Option 4: Serverless Deployment with Neon & Vercel (1-Click)
 
