@@ -5,23 +5,23 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api/index.js"
+      "destination": "https://udyam-zhrg.onrender.com/api/$1"
     },
     {
       "source": "/api",
-      "destination": "/api/index.js"
-    },
-    {
-      "source": "/api-docs/(.*)",
-      "destination": "/api/index.js"
-    },
-    {
-      "source": "/api-docs",
-      "destination": "/api/index.js"
+      "destination": "https://udyam-zhrg.onrender.com/api"
     },
     {
       "source": "/health",
-      "destination": "/api/index.js"
+      "destination": "https://udyam-zhrg.onrender.com/health"
+    },
+    {
+      "source": "/api-docs/(.*)",
+      "destination": "https://udyam-zhrg.onrender.com/api-docs/$1"
+    },
+    {
+      "source": "/api-docs",
+      "destination": "https://udyam-zhrg.onrender.com/api-docs"
     },
     {
       "source": "/(.*)",

@@ -1,8 +1,18 @@
 import axios from 'axios';
 
-const API_BASE =
-  process.env.REACT_APP_API_URL ||
-  (process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:5000/api');
+const getApiBase = () => {
+  let url = process.env.REACT_APP_API_URL;
+  if (!url) {
+    return process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:5000/api';
+  }
+  url = url.trim().replace(/\/+$/, '');
+  if (!url.endsWith('/api')) {
+    url += '/api';
+  }
+  return url;
+};
+
+const API_BASE = getApiBase();
 
 const api = axios.create({
   baseURL: API_BASE,
