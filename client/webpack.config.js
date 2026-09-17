@@ -39,6 +39,10 @@ module.exports = {
       template: './public/index.html',
       title: 'UDYAM — Operations & Inventory ERP',
     }),
+    new webpack.DefinePlugin({
+      'process.env.REACT_APP_API_URL': JSON.stringify(process.env.REACT_APP_API_URL || ''),
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
+    }),
   ],
   devServer: {
     port: 3000,
